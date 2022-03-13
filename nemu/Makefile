@@ -46,6 +46,7 @@ run: $(BINARY)
 	$(call git_commit, "run")
 	$(NEMU_EXEC)
 
+
 gdb: $(BINARY)
 	$(call git_commit, "gdb")
 	gdb -s $(BINARY) --args $(NEMU_EXEC)
