@@ -38,6 +38,12 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
+static int cmd_info(char *args);
+
+static int cmd_x(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -48,7 +54,9 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-
+  { "si", "Execute N(default = 1) steps of the program", cmd_si },
+  { "info", "Display the status of GPRs(r) / Display informations about the watchpoints(w)", cmd_info},
+  { "x", "Display 4*N bytes addrs in hexadecimal from EXPR", cmd_x}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -74,6 +82,63 @@ static int cmd_help(char *args) {
     printf("Unknown command '%s'\n", arg);
   }
   return 0;
+}
+
+static int cmd_si(char *args){
+    // TODO: 利用 strtok 读取出 N
+    char *str_num = strtok(NULL, " ");
+    // TODO: 然后根据 N 来执行对应的 cpu_exec(N) 操作
+    long long n = 0;
+    int i = 0, neg_flag = 1;;
+    if (str_num == NULL) {
+      cpu_exec(1);
+    }
+    else {
+      if (str_num[0] == '-') {
+        i++;
+        neg_flag = -1;
+      }
+      for (; i < strlen(str_num); i++) {
+        n *= 10;
+        char ch = str_num[i];
+        if (ch >= '0' && ch <= '9') {
+          n += ch - '0';
+        }
+        else {
+          printf("Unknown command '%s'\n", str_num);
+          return 0;
+        }
+      }
+      cpu_exec(n * neg_flag);
+    }
+    return 0;
+}
+
+static int cmd_info(char *args){
+    // 分割字符
+    char *sub_cmd = strtok(NULL, " ");
+    // 判断子命令是否是r
+    if (strcmp(sub_cmd, "r") == 0) {
+        // 依次打印所有寄存器
+        // 这里给个例子：打印出 eax 寄存器的值
+        for (int i = 0; i < 8; i++){
+          printf("%s:\t%8x\t\n", regsl[i], reg_l(i));
+          printf("%s:\t%8x\t\n", regsw[i], reg_w(i));
+          printf("%s:\t%8x\t\n", regsb[i], reg_b(i));
+        }
+    }
+    else if (strcmp(sub_cmd, "w") == 0)
+    {
+        // 这里我们会在 PA1.3 中实现
+    }
+    else {
+      printf("Unknown command '%s'\n", sub_cmd);
+    }
+    return 0;
+}
+
+static int cmd_x(char *args){
+	  return 0;	
 }
 
 void ui_mainloop(int is_batch_mode) {
