@@ -185,7 +185,7 @@ static int cmd_x(char *args){
       uint32_t read = vaddr_read(addr + 4 * i, 4);
       uint8_t bytes[4];
       for (int j = 0; j < 4; j ++) {
-        bytes[i] = vaddr_read(addr + 4 * i + j, 1); 
+        bytes[j] = vaddr_read(addr + 4 * i + j, 1); 
 	  }
 
     //每次循环将读取到的数据用 printf 打印出来
