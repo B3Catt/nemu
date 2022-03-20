@@ -98,7 +98,7 @@ static int cmd_si(char *args){
         i++;
         neg_flag = -1;
       }
-      for (; i < strlen(str_num); i++) {
+      for (; i < strlen(str_num); i ++) {
         n *= 10;
         char ch = str_num[i];
         if (ch >= '0' && ch <= '9') {
@@ -129,7 +129,7 @@ static int cmd_info(char *args){
     if (strcmp(sub_cmd, "r") == 0) {
         // 依次打印所有寄存器
         // 这里给个例子：打印出 eax 寄存器的值
-        for (int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i ++){
           printf("%s:\t%8x\t\n", regsl[i], reg_l(i));
           printf("%s:\t%8x\t\n", regsw[i], reg_w(i));
           printf("%s:\t%8x\t\n", regsb[i], reg_b(i));
@@ -146,7 +146,54 @@ static int cmd_info(char *args){
 }
 
 static int cmd_x(char *args){
-	  return 0;	
+	//分割字符串，得到起始位置和要读取的次数
+    char *str_num = strtok(NULL, " "),
+		 *str_expr = strtok(NULL, " ");
+    //循环使用 vaddr_read 函数来读取内存
+    int n = 0;
+    vaddr_t addr = 0;
+
+    for (int i = 0; i < strlen(str_num); i ++) {
+      n *= 10;
+      char ch = str_num[i];
+      if (ch >= '0' && ch <= '9') {
+      n += ch - '0';
+      }
+      else {
+        printf("Unknown command '%s'\n", str_num);
+        return 0;
+      }
+    }
+
+    for (int i = 0; i < strlen(str_expr); i ++) {
+      addr = addr << 4;
+      char ch = str_expr[i];
+      if (ch >= '0' && ch <= '9') {
+        addr += ch - '0';
+      }
+      else if (toupper(ch) >= 'A' && toupper(ch) <= 'F'){
+        addr += toupper(ch) - 'A' + 0xA;
+      }
+      else {
+        printf("Unknown command '%s'\n", str_num);
+        return 0;
+      }
+    }
+
+    for (int i = 0; i < n; i ++) {
+      uint32_t read = vaddr_read(addr + 4 * i, 4), block = 0;    //如何调用，怎么传递参数，请阅读代码
+      uint8_t bytes[4];
+      for (int j = 0; j < 4; j ++) {
+        block = block << (1 << 3);
+        bytes[4 - j - 1] = read % (1 << 3);
+        read = read >> (1 << 3);
+        block += bytes[4 - j - 1];
+      }
+
+    //每次循环将读取到的数据用 printf 打印出来
+      printf("0x%08x\t0x%8x\t%2x %2x %2x %2x\n", addr + 4 * i, block, bytes[0], bytes[1], bytes[2], bytes[3]);    //如果你不知道应该打印什么，可以参考参考输出形式
+    }
+    return 0;
 }
 
 void ui_mainloop(int is_batch_mode) {
