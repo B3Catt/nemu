@@ -146,18 +146,18 @@ static int cmd_info(char *args){
 }
 
 static int cmd_x(char *args){
-	//分割字符串，得到起始位置和要读取的次数
+    //分割字符串，得到起始位置和要读取的次数
     char *str_num = strtok(NULL, " "),
-		 *str_expr = strtok(NULL, " ");
-    //循环使用 vaddr_read 函数来读取内存
+      *str_expr = strtok(NULL, " ");
     int n = 0;
     vaddr_t addr = 0;
+    int i = 0;
 
-    for (int i = 0; i < strlen(str_num); i ++) {
+    for (; i < strlen(str_num); i ++) {
       n *= 10;
       char ch = str_num[i];
       if (ch >= '0' && ch <= '9') {
-      n += ch - '0';
+        n += ch - '0';
       }
       else {
         printf("Unknown command '%s'\n", str_num);
@@ -165,7 +165,7 @@ static int cmd_x(char *args){
       }
     }
 
-    for (int i = 0; i < strlen(str_expr); i ++) {
+    for (i = 2; i < strlen(str_expr); i ++) {
       addr = addr << 4;
       char ch = str_expr[i];
       if (ch >= '0' && ch <= '9') {
@@ -180,8 +180,9 @@ static int cmd_x(char *args){
       }
     }
 
+    //循环使用 vaddr_read 函数来读取内存
     for (int i = 0; i < n; i ++) {
-      uint32_t read = vaddr_read(addr + 4 * i, 4), block = 0;    //如何调用，怎么传递参数，请阅读代码
+      uint32_t read = vaddr_read(addr + 4 * i, 4), block = 0;
       uint8_t bytes[4];
       for (int j = 0; j < 4; j ++) {
         block = block << (1 << 3);
@@ -191,7 +192,7 @@ static int cmd_x(char *args){
       }
 
     //每次循环将读取到的数据用 printf 打印出来
-      printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, block, bytes[0], bytes[1], bytes[2], bytes[3]);    //如果你不知道应该打印什么，可以参考参考输出形式
+      printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, block, bytes[0], bytes[1], bytes[2], bytes[3]);
     }
     return 0;
 }
