@@ -182,17 +182,14 @@ static int cmd_x(char *args){
 
     //循环使用 vaddr_read 函数来读取内存
     for (int i = 0; i < n; i ++) {
-      uint32_t read = vaddr_read(addr + 4 * i, 4), block = 0;
+      uint32_t read = vaddr_read(addr + 4 * i, 4);
       uint8_t bytes[4];
       for (int j = 0; j < 4; j ++) {
-        block = block << (1 << 3);
-        bytes[4 - j - 1] = read % (1 << 3);
-        read = read >> (1 << 3);
-        block += bytes[4 - j - 1];
-      }
+        bytes[i] = vaddr_read(addr + 4 * i + j, 1); 
+	  }
 
     //每次循环将读取到的数据用 printf 打印出来
-      printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, block, bytes[0], bytes[1], bytes[2], bytes[3]);
+      printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, read, bytes[0], bytes[1], bytes[2], bytes[3]);
     }
     return 0;
 }
