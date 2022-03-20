@@ -20,7 +20,7 @@ void cpu_exec(uint64_t n) {
   }
   nemu_state = NEMU_RUNNING;
 
-  for (int i = 0; i < n; i ++) {
+  for (int i = 1; i <= n; i ++) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
 	bool print_flag = i < MAX_INSTR_TO_PRINT;	
