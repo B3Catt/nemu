@@ -109,8 +109,16 @@ static int cmd_si(char *args){
           return 0;
         }
       }
-      cpu_exec(n * neg_flag);
-    }
+	
+	  n *= neg_flag;
+    
+	  if (n < -1){
+        printf("Unknown command '%s'\n", str_num);
+      }
+      else {
+        cpu_exec(n);
+      }
+	}
     return 0;
 }
 
