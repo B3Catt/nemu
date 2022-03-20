@@ -179,7 +179,7 @@ static int cmd_x(char *args){
         return 0;
       }
     }
-
+	printf("Address \tDword block\tByte sequence\n");
     //循环使用 vaddr_read 函数来读取内存
     for (int i = 0; i < n; i ++) {
       uint32_t read = vaddr_read(addr + 4 * i, 4);
