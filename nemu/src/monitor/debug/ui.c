@@ -191,7 +191,7 @@ static int cmd_x(char *args){
       }
 
     //每次循环将读取到的数据用 printf 打印出来
-      printf("0x%08x\t0x%8x\t%2x %2x %2x %2x\n", addr + 4 * i, block, bytes[0], bytes[1], bytes[2], bytes[3]);    //如果你不知道应该打印什么，可以参考参考输出形式
+      printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, block, bytes[0], bytes[1], bytes[2], bytes[3]);    //如果你不知道应该打印什么，可以参考参考输出形式
     }
     return 0;
 }
