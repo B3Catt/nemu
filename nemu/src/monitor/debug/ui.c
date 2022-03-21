@@ -135,7 +135,7 @@ static int cmd_info(char *args){
         for (int i = 0; i < 8; i ++){
           printf("%s:\t%04x\t\n", regsw[i], reg_w(i));
         }
-        for (int i = 0; i < 8; i ++){
+        for (int i = 0; i < 4; i ++){
           printf("%s:\t%02x\t%s:\t%02x\t\n", regsb[i], reg_b(i), regsb[i + 4], reg_b((i + 4)));
 				}
     }
