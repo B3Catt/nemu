@@ -136,7 +136,7 @@ static int cmd_info(char *args){
           printf("%s:\t%04x\t\n", regsw[i], reg_w(i));
         }
         for (int i = 0; i < 8; i ++){
-          printf("%s:\t%02x\t%c", regsb[i], reg_b(i), '\t' ? '\n' : (i % 2 == 0));
+          printf("%s:\t%02x\t%c", regsb[i], reg_b(i), (i % 2) ? '\n' : '\t');
         }
     }
     else if (strcmp(sub_cmd, "w") == 0)
