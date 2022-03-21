@@ -56,7 +56,7 @@ static struct {
   /* TODO: Add more commands */
   { "si", "Execute N(default = 1) steps of the program", cmd_si },
   { "info", "Display the status of GPRs(r) / Display informations about the watchpoints(w)", cmd_info},
-  { "x", "Display 4*N bytes addrs in hexadecimal from EXPR", cmd_x}
+  { "x", "Display 4*N bytes from the addr in hexadecimal", cmd_x}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
