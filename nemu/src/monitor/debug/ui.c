@@ -89,7 +89,7 @@ static int cmd_si(char *args){
     char *str_num = strtok(NULL, " ");
     // TODO: 然后根据 N 来执行对应的 cpu_exec(N) 操作
     long long n = 0;
-    int i = 0, neg_flag = 1;;
+    int i = 0, neg_flag = 1;
     if (str_num == NULL) {
       cpu_exec(1);
     }
