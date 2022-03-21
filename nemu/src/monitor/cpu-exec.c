@@ -6,7 +6,7 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INSTR_TO_PRINT 10
+#define MAX_INSTR_TO_PRINT 5
 
 int nemu_state = NEMU_STOP;
 
@@ -19,11 +19,12 @@ void cpu_exec(uint64_t n) {
     return;
   }
   nemu_state = NEMU_RUNNING;
-  bool print_flag = n < MAX_INSTR_TO_PRINT;
-  for (; n > 0; n --) {
-    /* Execute one instruction, including instruction fetch,
-     * instruction decode, and the actual execution. */
-    exec_wrapper(print_flag);
+
+	for (int i = 1; i <= n; i ++) {
+  /* Execute one instruction, including instruction fetch,
+   * instruction decode, and the actual execution. */
+  bool print_flag = i < MAX_INSTR_TO_PRINT;
+	exec_wrapper(print_flag);
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
