@@ -130,9 +130,13 @@ static int cmd_info(char *args){
         // 依次打印所有寄存器
         // 这里给个例子：打印出 eax 寄存器的值
         for (int i = 0; i < 8; i ++){
-          printf("%s:\t%8x\t\n", regsl[i], reg_l(i));
-          printf("%s:\t%8x\t\n", regsw[i], reg_w(i));
-          printf("%s:\t%8x\t\n", regsb[i], reg_b(i));
+          printf("%s:\t%08x\t\n", regsl[i], reg_l(i));
+        }
+        for (int i = 0; i < 8; i ++){
+          printf("%s:\t%04x\t\n", regsw[i], reg_w(i));
+        }
+        for (int i = 0; i < 8; i ++){
+          printf("%s:\t%02x\t%c", regsb[i], reg_b(i), '\n' ? '\t' : i % 2);
         }
     }
     else if (strcmp(sub_cmd, "w") == 0)
