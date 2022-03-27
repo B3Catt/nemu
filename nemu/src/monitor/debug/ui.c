@@ -88,8 +88,10 @@ static int cmd_si(char *args){
     // TODO: 利用 strtok 读取出 N
     char *str_num = strtok(NULL, " ");
     // TODO: 然后根据 N 来执行对应的 cpu_exec(N) 操作
-    long long n = 0;
-    sscanf(str_num, "%lld", &n);
+    long long n = 1;
+		if (str_num) {
+    	sscanf(str_num, "%lld", &n);
+		}
 	  cpu_exec(n);
     return 0;
 }
