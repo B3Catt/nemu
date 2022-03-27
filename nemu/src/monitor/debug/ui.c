@@ -89,36 +89,8 @@ static int cmd_si(char *args){
     char *str_num = strtok(NULL, " ");
     // TODO: 然后根据 N 来执行对应的 cpu_exec(N) 操作
     long long n = 0;
-    int i = 0, neg_flag = 1;
-    if (str_num == NULL) {
-      cpu_exec(1);
-    }
-    else {
-      if (str_num[0] == '-') {
-        i++;
-        neg_flag = -1;
-      }
-      for (; i < strlen(str_num); i ++) {
-        n *= 10;
-        char ch = str_num[i];
-        if (ch >= '0' && ch <= '9') {
-          n += ch - '0';
-        }
-        else {
-          printf("Unknown command '%s'\n", str_num);
-          return 0;
-        }
-      }
-	
-	  n *= neg_flag;
-    
-	  if (n < -1){
-        printf("Unknown command '%s'\n", str_num);
-      }
-      else {
-        cpu_exec(n);
-      }
-	}
+    sscanf(str_num, "%lld", &n);
+	  cpu_exec(n);
     return 0;
 }
 
@@ -155,41 +127,16 @@ static int cmd_x(char *args){
       *str_expr = strtok(NULL, " ");
     int n = 0;
     vaddr_t addr = 0;
-    int i = 0;
 
-    for (; i < strlen(str_num); i ++) {
-      n *= 10;
-      char ch = str_num[i];
-      if (ch >= '0' && ch <= '9') {
-        n += ch - '0';
-      }
-      else {
-        printf("Unknown command '%s'\n", str_num);
-        return 0;
-      }
-    }
-
-    for (i = 2; i < strlen(str_expr); i ++) {
-      addr = addr << 4;
-      char ch = str_expr[i];
-      if (ch >= '0' && ch <= '9') {
-        addr += ch - '0';
-      }
-      else if (toupper(ch) >= 'A' && toupper(ch) <= 'F'){
-        addr += toupper(ch) - 'A' + 0xA;
-      }
-      else {
-        printf("Unknown command '%s'\n", str_num);
-        return 0;
-      }
-    }
-	printf("Address \tDword block\tByte sequence\n");
+    sscanf(str_num, "%d", &n);
+    sscanf(str_expr, "%x", &addr);
+  	printf("Address \tDword block\tByte sequence\n");
     //循环使用 vaddr_read 函数来读取内存
     for (int i = 0; i < n; i ++) {
       uint32_t read = vaddr_read(addr + 4 * i, 4);
       uint8_t bytes[4];
       for (int j = 0; j < 4; j ++) {
-        bytes[j] = vaddr_read(addr + 4 * i + j, 1); 
+        bytes[j] = vaddr_read(addr + 4 * i + j, 1);
 	  }
 
     //每次循环将读取到的数据用 printf 打印出来
