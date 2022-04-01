@@ -32,7 +32,7 @@ static struct rule {
   {"/", '/'},
   {"\\(", '('},
   {"\\)", ')'},
-  {"\\d+", TK_DECN},
+  {"[0-9]+", TK_DECN},
   {"0x[\\da-fA-F]+", TK_HEXN}
 };
 
