@@ -44,6 +44,8 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
+static int cmd_p(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -56,7 +58,8 @@ static struct {
   /* TODO: Add more commands */
   { "si", "Execute N(default = 1) steps of the program", cmd_si },
   { "info", "Display the status of GPRs(r) / Display informations about the watchpoints(w)", cmd_info},
-  { "x", "Display 4*N bytes from the addr in hexadecimal", cmd_x}
+  { "x", "Display 4*N bytes from the addr in hexadecimal", cmd_x},
+	{ "p", "Calculate the value of the expression", cmd_p}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -145,6 +148,18 @@ static int cmd_x(char *args){
       printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, read, bytes[0], bytes[1], bytes[2], bytes[3]);
     }
     return 0;
+}
+
+static int cmd_p(char* args) {
+  bool flag = true;
+  uint32_t val = expr(args, &flag);
+  if (flag) {
+    printf("%d\n", val);
+  }
+  else {
+    printf("Wrong expression \"%s\"\n", args);
+  }
+  return 0;
 }
 
 void ui_mainloop(int is_batch_mode) {
