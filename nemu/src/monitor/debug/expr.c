@@ -215,21 +215,21 @@ uint32_t eval(int p, int q, bool *success) {
     if (p > q) {
       /* Bad expression */
       *success = false;
-			return 0;
+      return 0;
     }
     else if (p == q) {
       /* Single token.
         * For now this token should be a number.
         * Return the value of the number.
       */
-      int num = 0;
+      uint32_t num = 0;
       if (tokens[p].type == TK_DECN) {
         sscanf(tokens[p].str, "%d", &num);
       }
       else if (tokens[p].type == TK_HEXN) {
         sscanf(tokens[p].str, "%x", &num);
       }
-			else if (tokens[p].type >= R_EAX && tokens[p].type <= R_EDI) {
+      else if (tokens[p].type >= R_EAX && tokens[p].type <= R_EDI) {
         num = reg_l(tokens[p].type);
       }
       else if (tokens[p].type == R_EIP) {
@@ -246,18 +246,28 @@ uint32_t eval(int p, int q, bool *success) {
       */
       return eval(p + 1, q - 1, success);
     }
-		else {
+    else {
       /* We should do more things here. */
-      int op = find_dominated_op(p, q, success),
-        val1 = eval(p, op - 1, success),
-        val2 = eval(op + 1, q, success);
-      switch (tokens[op].type) {
-        case '+': return val1 + val2;
-        case '-': return val1 - val2;
-        case '*': return val1 * val2;
-        case '/': return val1 / val2;
-        default: success = false;
-        return 0;
+      int op = find_dominated_op(p, q, success);
+      if (tokens[op].type == TK_NEG || tokens[op].type == TK_PTR) {
+        int val = eval(p + 1, q, success);
+        switch (tokens[op].type) {
+          case TK_NEG: return -val;
+          case TK_PTR: return vaddr_read(val, 4);
+					default: return 0;
+        }
+      }
+      else {
+        int val1 = eval(p, op - 1, success),
+          val2 = eval(op + 1, q, success);
+        switch (tokens[op].type) {
+          case '+': return val1 + val2;
+          case '-': return val1 - val2;
+          case '*': return val1 * val2;
+          case '/': return val1 / val2;
+          default: success = false;
+          return 0;
+        }
       }
     }
   }
