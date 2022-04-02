@@ -343,10 +343,10 @@ uint32_t expr(char *e, bool *success) {
   }
   //判断是否为单目运算符
   for (int i = 0; i < nr_token; i ++) {
-    if (tokens[i].type == '*' && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= TK_OR && tokens[i - 1].type <= TK_PTR))) {
+    if (tokens[i].type == TK_MUL && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= TK_OR && tokens[i - 1].type <= TK_PTR))) {
         tokens[i].type = TK_PTR;
     }
-    else if (tokens[i].type == '-' && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= TK_OR && tokens[i - 1].type <= TK_PTR))) {
+    else if (tokens[i].type == TK_SUB && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= TK_OR && tokens[i - 1].type <= TK_PTR))) {
         tokens[i].type = TK_NEG;
     }
   }
