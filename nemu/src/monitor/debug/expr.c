@@ -33,7 +33,7 @@ static struct rule {
   {"\\(", '('},
   {"\\)", ')'},
   {"0x[0-9a-fA-F]+", TK_HEXN},
-  {"[0-9]+", TK_DECN}
+  {"(\\d)+", TK_DECN}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
