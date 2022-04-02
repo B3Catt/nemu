@@ -7,34 +7,30 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
-
-  /* TODO: Add more token types */
-	TK_DECN, TK_HEXN,
-  R_EIP,
+  TK_NOTYPE = 256,
+  TK_OR,     //逻辑或
+  TK_AND,    //逻辑与
+  TK_NEQ,    //不等于
+  TK_EQ,     //等于
+  TK_BE, TK_NB, TK_B, TK_NBE,   //比较运算符
+  TK_PLUS, TK_SUB,  //加减
+  TK_MUL, TK_DIV,   //乘除
+  TK_NOT,         //逻辑非
   TK_NEG,         //负号
-  TK_PTR          //指针
+  TK_PTR,         //指针
+
+  TK_DECN, TK_HEXN,
+  R_EIP,
 };
 
 static struct rule {
   char *regex;
   int token_type;
 } rules[] = {
-
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
-
-  {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ},         // equal
-
-	{"-", '-'},
-  {"\\*", '*'},
-  {"/", '/'},
-  {"\\(", '('},
-  {"\\)", ')'},
-  {"\\$eax", R_EAX},
+  {" +", TK_NOTYPE},            // spaces
+  {"0x[0-9a-fA-F]+", TK_HEXN},  //十六进制数
+  {"[0-9]+", TK_DECN},          //十进制数
+  {"\\$eax", R_EAX},            //寄存器
   {"\\$ecx", R_ECX},
   {"\\$edx", R_EDX},
   {"\\$ebx", R_EBX},
@@ -43,8 +39,21 @@ static struct rule {
   {"\\$esi", R_ESI},
   {"\\$edi", R_EDI},
   {"\\$eip", R_EIP},
-  {"0x[0-9a-fA-F]+", TK_HEXN},
-  {"[0-9]+", TK_DECN}
+  {"\\(", '('},                 //四则运算
+  {"\\)", ')'},
+  {"\\+", TK_PLUS},
+  {"-", TK_SUB},
+  {"\\*", TK_MUL},
+  {"/", TK_DIV},
+  {"==", TK_EQ},                //逻辑运算
+  {"!=", TK_NEQ},
+  {"&&", TK_AND},
+  {"\\|\\|", TK_OR},
+  {"<=", TK_BE},
+  {">=", TK_NB},
+  {"<", TK_B},
+  {">", TK_NBE},
+  {"!", TK_NOT}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -179,29 +188,69 @@ int find_dominated_op(int p, int q, bool *success) {
         count ++; break;
       case ')':
         count --; break;
-      case '+':
-      case '-':
+      case TK_OR:
         if (!count) {
           op = i;
           op_type = tokens[i].type;
         }
         break;
-      case '*':
-      case '/':
+      case TK_AND:
         if (!count) {
-          if (op_type != '+' && op_type != '-') {
+          if (op_type != TK_OR) {
+            op = i;
+            op_type = tokens[i].type;
+          }
+        }
+        break;
+      case TK_NEQ:
+      case TK_EQ:
+        if (!count) {
+          if (op_type != TK_OR && op_type != TK_AND) {
+            op = i;
+            op_type = tokens[i].type;
+          }
+        }
+        break;
+      case TK_BE:
+      case TK_NB:
+      case TK_B:
+      case TK_NBE:
+        if (!count) {
+          if (op_type > TK_NEQ && op_type < TK_OR) {
+            op = i;
+            op_type = tokens[i].type;
+          }
+        }
+        break;
+      case TK_PLUS:
+      case TK_SUB:
+        if (!count) {
+          if (op_type > TK_NBE && op_type < TK_OR) {
+            op = i;
+            op_type = tokens[i].type;
+          }
+        }
+        break;
+      case TK_MUL:
+      case TK_DIV:
+        if (!count) {
+          if (op_type > TK_SUB && op_type < TK_OR) {
+            op = i;
+            op_type = tokens[i].type;
+          }
+        }
+        break;
+      case TK_NOT:
+      case TK_NEG:
+      case TK_PTR:
+        if (!count) {
+          if (op_type == TK_NOTYPE) {
             op = i;
             op_type = tokens[i].type;
           }
         }
         break;
       default: break;
-    }
-  }
-  if (op_type == TK_NOTYPE) {
-    if (tokens[p].type == TK_NEG || tokens[p].type == TK_PTR) {
-      op = p;
-      op_type = tokens[p].type;
     }
   }
   if (op_type == TK_NOTYPE) {
@@ -247,28 +296,39 @@ uint32_t eval(int p, int q, bool *success) {
       return eval(p + 1, q - 1, success);
     }
     else {
-      /* We should do more things here. */
       int op = find_dominated_op(p, q, success);
-      if (tokens[op].type == TK_NEG || tokens[op].type == TK_PTR) {
+      int op_type = tokens[op].type;
+      //单目运算符
+      if (op_type >= TK_NOT || op_type <= TK_PTR) {
         int val = eval(p + 1, q, success);
-        switch (tokens[op].type) {
+        switch (op_type) {
           case TK_NEG: return -val;
           case TK_PTR: return vaddr_read(val, 4);
-					default: return 0;
+          case TK_NOT: return !val;
+          default: break;
         }
       }
+      //双目运算符
       else {
         int val1 = eval(p, op - 1, success),
           val2 = eval(op + 1, q, success);
-        switch (tokens[op].type) {
-          case '+': return val1 + val2;
-          case '-': return val1 - val2;
-          case '*': return val1 * val2;
-          case '/': return val1 / val2;
-          default: success = false;
-          return 0;
+        switch (op_type) {
+          case TK_PLUS: return val1 + val2;
+          case TK_SUB: return val1 - val2;
+          case TK_MUL: return val1 * val2;
+          case TK_DIV: return val1 / val2;
+          case TK_EQ: return val1 == val2;
+          case TK_NEQ: return val1 != val2;
+          case TK_AND: return val1 && val2;
+          case TK_OR: return val1 || val2;
+          case TK_BE: return val1 <= val2;
+          case TK_NB: return val1 >= val2;
+          case TK_B: return val1 < val2;
+          case TK_NBE: return val1 > val2;
+          default: success = false; break;
         }
       }
+      return 0;
     }
   }
   else {
@@ -281,13 +341,12 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
-  /* TODO: Insert codes to evaluate the expression. */
-	for (int i = 0; i < nr_token; i ++) {
-    if (tokens[i].type == '*' && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= '*' && tokens[i - 1].type <= '/'))) {
+  //判断是否为单目运算符
+  for (int i = 0; i < nr_token; i ++) {
+    if (tokens[i].type == '*' && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= TK_OR && tokens[i - 1].type <= TK_PTR))) {
         tokens[i].type = TK_PTR;
     }
-    else if (tokens[i].type == '-' && (i == 0 || tokens[i - 1].type == '(' || tokens[i - 1].type == TK_NEG || (tokens[i - 1].type >= '*' && tokens[i - 1].type <= '/'))) {
+    else if (tokens[i].type == '-' && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= TK_OR && tokens[i - 1].type <= TK_PTR))) {
         tokens[i].type = TK_NEG;
     }
   }
