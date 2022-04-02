@@ -216,7 +216,7 @@ int find_dominated_op(int p, int q, bool *success) {
       case TK_B:
       case TK_NBE:
         if (!count) {
-          if (op_type > TK_NEQ && op_type < TK_OR) {
+          if (op_type > TK_NEQ || op_type < TK_OR) {
             op = i;
             op_type = tokens[i].type;
           }
@@ -225,7 +225,7 @@ int find_dominated_op(int p, int q, bool *success) {
       case TK_PLUS:
       case TK_SUB:
         if (!count) {
-          if (op_type > TK_NBE && op_type < TK_OR) {
+          if (op_type > TK_NBE || op_type < TK_OR) {
             op = i;
             op_type = tokens[i].type;
           }
@@ -234,7 +234,7 @@ int find_dominated_op(int p, int q, bool *success) {
       case TK_MUL:
       case TK_DIV:
         if (!count) {
-          if (op_type > TK_SUB && op_type < TK_OR) {
+          if (op_type > TK_SUB || op_type < TK_OR) {
             op = i;
             op_type = tokens[i].type;
           }
