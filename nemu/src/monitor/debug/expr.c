@@ -198,7 +198,7 @@ int find_dominated_op(int p, int q, bool *success) {
       default: break;
     }
   }
-	if (op_type == TK_NOTYPE) {
+  if (op_type == TK_NOTYPE) {
     if (tokens[p].type == TK_NEG || tokens[p].type == TK_PTR) {
       op = p;
       op_type = tokens[p].type;
