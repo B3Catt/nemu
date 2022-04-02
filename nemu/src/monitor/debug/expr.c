@@ -298,8 +298,7 @@ uint32_t eval(int p, int q, bool *success) {
     else {
       int op = find_dominated_op(p, q, success);
       int op_type = tokens[op].type;
-			printf("%d\n", op_type);
-      //单目运算符
+			//单目运算符
       if (op_type >= TK_NOT || op_type <= TK_PTR) {
         int val = eval(p + 1, q, success);
         switch (op_type) {
@@ -313,7 +312,7 @@ uint32_t eval(int p, int q, bool *success) {
       else {
         int val1 = eval(p, op - 1, success),
           val2 = eval(op + 1, q, success);
-        switch (op_type) {
+				switch (op_type) {
           case TK_PLUS: return val1 + val2;
           case TK_SUB: return val1 - val2;
           case TK_MUL: return val1 * val2;
