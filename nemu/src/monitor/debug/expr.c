@@ -119,9 +119,9 @@ static bool make_token(char *e) {
   return true;
 }
 
-bool check_parentheses(int p, int q) {
+bool check_parentheses(int p, int q, bool *success) {
   int k = p, count = 0;
-  for (; k <= q; k++) {
+  for (; k <= q; k ++) {
     if (tokens[k].type == '(') {
       count++;
     }
@@ -137,7 +137,8 @@ bool check_parentheses(int p, int q) {
     return true;
   }
   else if (count < 0) {
-    assert(0);
+    *success = false;
+    return false;
   }
 
   for (k++; k <= q; k++) {
@@ -153,12 +154,13 @@ bool check_parentheses(int p, int q) {
     }
   }
   if (count < 0) {
-    assert(0);
+    *success = false;
+    return false;
   }
   else return false;
 }
 
-int find_dominated_op(int p, int q) {
+int find_dominated_op(int p, int q, bool *success) {
   int op = 0, op_type = TK_NOTYPE, count = 0;
   for (int i = p; i <= q; i ++) {
     switch (tokens[i].type) {
@@ -185,49 +187,59 @@ int find_dominated_op(int p, int q) {
       default: break;
     }
   }
+  if (op_type == TK_NOTYPE) {
+    *success = false;
+  }
   return op;
 }
 
-uint32_t eval(int p, int q) {
-  if (p > q) {
-    /* Bad expression */
-		return 0;
-  }
-  else if (p == q) {
-    /* Single token.
-     * For now this token should be a number.
-     * Return the value of the number.
-    */
-    int num;
-    if (tokens[p].type == TK_DECN) {
-      sscanf(tokens[p].str, "%d", &num);
+uint32_t eval(int p, int q, bool *success) {
+  if (*success) {
+    if (p > q) {
+      /* Bad expression */
+      *success = false;
+			return 0;
     }
-    else if (tokens[p].type == TK_HEXN) {
-      sscanf(tokens[p].str, "%x", &num);
+    else if (p == q) {
+      /* Single token.
+        * For now this token should be a number.
+        * Return the value of the number.
+      */
+      int num = 0;
+      if (tokens[p].type == TK_DECN) {
+        sscanf(tokens[p].str, "%d", &num);
+      }
+      else if (tokens[p].type == TK_HEXN) {
+        sscanf(tokens[p].str, "%x", &num);
+      }
+      else {
+        *success = false;
+      }
+      return num;
+    }
+    else if (check_parentheses(p, q, success) == true) {
+      /* The expression is surrounded by a matched pair of parentheses.
+        * If that is the case, just throw away the parentheses.
+      */
+      return eval(p + 1, q - 1, success);
     }
     else {
-      assert(0);
+      /* We should do more things here. */
+      int op = find_dominated_op(p, q, success),
+        val1 = eval(p, op - 1, success),
+        val2 = eval(op + 1, q, success);
+      switch (tokens[op].type) {
+        case '+': return val1 + val2;
+        case '-': return val1 - val2;
+        case '*': return val1 * val2;
+        case '/': return val1 / val2;
+        default: success = false;
+        return 0;
+      }
     }
-    return num;
-  }
-  else if (check_parentheses(p, q) == true) {
-    /* The expression is surrounded by a matched pair of parentheses.
-     * If that is the case, just throw away the parentheses.
-    */
-    return eval(p + 1, q - 1);
   }
   else {
-    /* We should do more things here. */
-    int op = find_dominated_op(p, q),
-      val1 = eval(p, op - 1),
-      val2 = eval(op + 1, q);
-    switch (tokens[op].type) {
-      case '+': return val1 + val2;
-      case '-': return val1 - val2;
-      case '*': return val1 * val2;
-      case '/': return val1 / val2;
-      default: assert(0);
-    }
+    return 0;
   }
 }
 
@@ -238,7 +250,7 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  return eval(0, nr_token - 1);
+  return eval(0, nr_token - 1, success);
 
   return 0;
 }
