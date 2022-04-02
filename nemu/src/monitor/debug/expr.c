@@ -10,8 +10,10 @@ enum {
   TK_NOTYPE = 256, TK_EQ,
 
   /* TODO: Add more token types */
-	TK_DECN, TK_HEXN
-
+	TK_DECN, TK_HEXN,
+  R_EIP,
+  TK_NEG,         //负号
+  TK_PTR          //指针
 };
 
 static struct rule {
@@ -32,8 +34,17 @@ static struct rule {
   {"/", '/'},
   {"\\(", '('},
   {"\\)", ')'},
+  {"\\$eax", R_EAX},
+  {"\\$ecx", R_ECX},
+  {"\\$edx", R_EDX},
+  {"\\$ebx", R_EBX},
+  {"\\$esp", R_ESP},
+  {"\\$ebp", R_EBP},
+  {"\\$esi", R_ESI},
+  {"\\$edi", R_EDI},
+  {"\\$eip", R_EIP},
   {"0x[0-9a-fA-F]+", TK_HEXN},
-  {"\\d+", TK_DECN}
+  {"[0-9]+", TK_DECN}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -211,6 +222,12 @@ uint32_t eval(int p, int q, bool *success) {
       }
       else if (tokens[p].type == TK_HEXN) {
         sscanf(tokens[p].str, "%x", &num);
+      }
+			else if (tokens[p].type >= R_EAX && tokens[p].type <= R_EDI) {
+        num = vaddr_read(reg_l(tokens[p].type), 4);
+      }
+      else if (tokens[p].type == R_EIP) {
+        num = vaddr_read(cpu.eip, 4);
       }
       else {
         *success = false;
