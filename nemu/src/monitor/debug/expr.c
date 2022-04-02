@@ -198,6 +198,12 @@ int find_dominated_op(int p, int q, bool *success) {
       default: break;
     }
   }
+	if (op_type == TK_NOTYPE) {
+    if (tokens[p].type == TK_NEG || tokens[p].type == TK_PTR) {
+      op = p;
+      op_type = tokens[p].type;
+    }
+  }
   if (op_type == TK_NOTYPE) {
     *success = false;
   }
@@ -240,13 +246,7 @@ uint32_t eval(int p, int q, bool *success) {
       */
       return eval(p + 1, q - 1, success);
     }
-		else if (tokens[p].type == TK_NEG) {
-      return -eval(p + 1, q, success);
-    }
-    else if (tokens[p].type == TK_PTR) {
-      return vaddr_read(eval(p + 1, q, success), 4);
-    }
-    else {
+		else {
       /* We should do more things here. */
       int op = find_dominated_op(p, q, success),
         val1 = eval(p, op - 1, success),
