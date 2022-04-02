@@ -279,8 +279,8 @@ uint32_t expr(char *e, bool *success) {
     }
     else if (tokens[i].type == '-' && (i == 0 || tokens[i - 1].type == '(' || tokens[i - 1].type == TK_NEG || (tokens[i - 1].type >= '*' && tokens[i - 1].type <= '/'))) {
         tokens[i].type = TK_NEG;
-				printf("1\n");
     }
+		printf("1\n");
   }
   return eval(0, nr_token - 1, success);
 
