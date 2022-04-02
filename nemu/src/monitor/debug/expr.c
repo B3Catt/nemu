@@ -224,10 +224,10 @@ uint32_t eval(int p, int q, bool *success) {
         sscanf(tokens[p].str, "%x", &num);
       }
 			else if (tokens[p].type >= R_EAX && tokens[p].type <= R_EDI) {
-        num = vaddr_read(reg_l(tokens[p].type), 4);
+        num = reg_l(tokens[p].type);
       }
       else if (tokens[p].type == R_EIP) {
-        num = vaddr_read(cpu.eip, 4);
+        num = cpu.eip;
       }
       else {
         *success = false;
