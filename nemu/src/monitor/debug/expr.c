@@ -240,10 +240,10 @@ uint32_t eval(int p, int q, bool *success) {
       */
       return eval(p + 1, q - 1, success);
     }
-		else if (p == TK_NEG) {
+		else if (tokens[p].type == TK_NEG) {
       return -eval(p + 1, q, success);
     }
-    else if (p == TK_PTR) {
+    else if (tokens[p].type == TK_PTR) {
       return vaddr_read(eval(p + 1, q, success), 4);
     }
     else {
@@ -280,7 +280,6 @@ uint32_t expr(char *e, bool *success) {
     else if (tokens[i].type == '-' && (i == 0 || tokens[i - 1].type == '(' || tokens[i - 1].type == TK_NEG || (tokens[i - 1].type >= '*' && tokens[i - 1].type <= '/'))) {
         tokens[i].type = TK_NEG;
     }
-		printf("1\n");
   }
   return eval(0, nr_token - 1, success);
 
