@@ -306,7 +306,7 @@ uint32_t eval(int p, int q, bool *success) {
           case TK_NEG: return -val;
           case TK_PTR: return vaddr_read(val, 4);
           case TK_NOT: return !val;
-          default: break;
+          default: success = false; return 0;
         }
       }
       //双目运算符
@@ -326,10 +326,9 @@ uint32_t eval(int p, int q, bool *success) {
           case TK_NB: return val1 >= val2;
           case TK_B: return val1 < val2;
           case TK_NBE: return val1 > val2;
-          default: success = false; break;
+          default: success = false; return 0;
         }
       }
-      return 0;
     }
   }
   else {
