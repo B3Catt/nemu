@@ -241,6 +241,7 @@ uint32_t eval(int p, int q, bool *success) {
       return eval(p + 1, q - 1, success);
     }
 		else if (p == TK_NEG) {
+			printf("1111\n");
       return -eval(p + 1, q, success);
     }
     else if (p == TK_PTR) {
