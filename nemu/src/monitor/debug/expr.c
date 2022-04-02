@@ -299,7 +299,7 @@ uint32_t eval(int p, int q, bool *success) {
       int op = find_dominated_op(p, q, success);
       int op_type = tokens[op].type;
 			//单目运算符
-      if (op_type >= TK_NOT || op_type <= TK_PTR) {
+      if (op_type >= TK_NOT && op_type <= TK_PTR) {
         int val = eval(p + 1, q, success);
         switch (op_type) {
           case TK_NEG: return -val;
