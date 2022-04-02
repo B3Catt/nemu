@@ -240,6 +240,12 @@ uint32_t eval(int p, int q, bool *success) {
       */
       return eval(p + 1, q - 1, success);
     }
+		else if (p == TK_NEG) {
+      return -eval(p + 1, q, success);
+    }
+    else if (p == TK_PTR) {
+      return vaddr_read(eval(p + 1, q, success), 4);
+    }
     else {
       /* We should do more things here. */
       int op = find_dominated_op(p, q, success),
@@ -267,6 +273,14 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
+	for (int i = 0; i < nr_token; i ++) {
+    if (tokens[i].type == '*' && (i == 0 || tokens[i - 1].type == '(' || (tokens[i - 1].type >= '*' && tokens[i - 1].type <= '/'))) {
+        tokens[i].type = TK_PTR;
+    }
+    else if (tokens[i].type == '-' && (i == 0 || tokens[i - 1].type == '(' || tokens[i - 1].type == TK_NEG || (tokens[i - 1].type >= '*' && tokens[i - 1].type <= '/'))) {
+        tokens[i].type = TK_NEG;
+    }
+  }
   return eval(0, nr_token - 1, success);
 
   return 0;
