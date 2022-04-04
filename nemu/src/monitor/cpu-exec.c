@@ -35,8 +35,8 @@ void cpu_exec(uint64_t n) {
   if (p) {
     printf("Hit watchpoint %d at address %08x\n", p->NO, cpu.eip);
     printf("expr      = %s\n", p->expr);
-    printf("old value = %08x\n", p->old_val);
-    printf("new value = %08x\n", p->new_val);
+    printf("old value = 0x%08x\n", p->old_val);
+    printf("new value = 0x%08x\n", p->new_val);
     nemu_state = NEMU_STOP;
   }
 #endif

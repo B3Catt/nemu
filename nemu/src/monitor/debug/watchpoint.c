@@ -78,11 +78,13 @@ int set_watchpoint(char *e) {
   uint32_t val = expr(e, &flag);
   if (flag) {
     WP *p = new_wp();
-    p->expr = e;
+    for (int i = 0; i < strlen(e); i++) {
+			p->expr[i] = *(e + i);
+		}
     p->old_val = val;
     printf("Set watchpoint #%d\n", p->NO);
     printf("expr      = %s\n", p->expr);
-    printf("old value = %08x\n", p->old_val);
+    printf("old value = 0x%08x\n", p->old_val);
   }
   else {
     printf("Wrong expression \"%s\"\n", e);
@@ -110,7 +112,7 @@ void list_watchpoint() {
   WP *p = head;
   printf("NO Expr\t\tOld Value\n");
   while (p) {
-    printf("%d %s\t\t%08x", p->NO, p->expr, p->old_val);
+    printf("%d %s\t\t0x%08x\n", p->NO, p->expr, p->old_val);
     p = p->next;
   }
 }
