@@ -27,13 +27,14 @@ void cpu_exec(uint64_t n) {
 	/* Execute one instruction, including instruction fetch,
    * instruction decode, and the actual execution. */
   
+  uint32_t old_eip = cpu.eip;
 	exec_wrapper(print_flag);
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
   WP *p = scan_watchpoint();
   if (p) {
-    printf("Hit watchpoint %d at address 0x%08x\n", p->NO, cpu.eip);
+    printf("Hit watchpoint %d at address 0x%08x\n", p->NO, old_eip);
     printf("expr      = %s\n", p->expr);
     printf("old value = 0x%08x\n", p->old_val);
     printf("new value = 0x%08x\n", p->new_val);
