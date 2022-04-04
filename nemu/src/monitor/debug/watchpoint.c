@@ -77,10 +77,8 @@ int set_watchpoint(char *e) {
   bool flag = true;
   uint32_t val = expr(e, &flag);
   if (flag) {
-    WP *p = new_wp();
-    for (int i = 0; i < strlen(e); i++) {
-			p->expr[i] = *(e + i);
-		}
+    WP *p = new_wp(); 
+    strcpy(p->expr, e);
     p->old_val = val;
     printf("Set watchpoint #%d\n", p->NO);
     printf("expr      = %s\n", p->expr);
