@@ -46,6 +46,10 @@ static int cmd_x(char *args);
 
 static int cmd_p(char *args);
 
+static int cmd_w(char *args);
+
+static int cmd_d(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -59,7 +63,9 @@ static struct {
   { "si", "Execute N(default = 1) steps of the program", cmd_si },
   { "info", "Display the status of GPRs(r) / Display informations about the watchpoints(w)", cmd_info},
   { "x", "Display 4*N bytes from the addr in hexadecimal", cmd_x},
-	{ "p", "Calculate the value of the expression", cmd_p}
+	{ "p", "Calculate the value of the expression", cmd_p},
+  { "w", "Set the watchpoint", cmd_w},
+  { "d", "Delete watchpoint", cmd_d}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -116,10 +122,9 @@ static int cmd_info(char *args){
           printf("%s:\t%02x\t%s:\t%02x\t\n", regsb[i], reg_b(i), regsb[i + 4], reg_b((i + 4)));
 				}
     }
-    else if (strcmp(sub_cmd, "w") == 0)
-    {
-        // 这里我们会在 PA1.3 中实现
-    }
+    else if (strcmp(sub_cmd, "w") == 0) {
+	    list_watchpoint();
+		}
     else {
       printf("Unknown command '%s'\n", sub_cmd);
     }
@@ -158,6 +163,23 @@ static int cmd_p(char* args) {
   }
   else {
     printf("Wrong expression \"%s\"\n", args);
+  }
+  return 0;
+}
+
+static int cmd_w(char* args) {
+  return set_watchpoint(args);
+}
+
+static int cmd_d(char* args) {
+  int n;
+  sscanf(args, "%d", &n);
+  bool flag = delete_watchpoint(n);
+  if (flag) {
+    printf("Watchpoint %d deleted\n", n);
+  }
+  else {
+    printf("Watchpoint %d not exist", n);
   }
   return 0;
 }
