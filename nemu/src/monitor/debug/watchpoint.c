@@ -152,6 +152,7 @@ WP* get_breakpoint(uint32_t addr) {
   while (p) {
     if (p->type == 'b' && p->address == addr) {
       p->is_hitted = true;
+			printf("%d\n", p->NO);
       return p;
     }
     p = p->next;
@@ -165,7 +166,6 @@ void create_breakpoint() {
     if (p->type == 'b') {
       if (p->is_hitted) {
         p->is_hitted = false;
-				printf("%d\n", p->NO);
       }
       else {
         p->old_op = vaddr_read(p->address, 1);

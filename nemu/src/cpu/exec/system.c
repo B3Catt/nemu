@@ -69,7 +69,7 @@ make_EHelper(out) {
 make_EHelper(int_3) {
   (*eip)--;
   WP* p = get_breakpoint(*eip);
-	printf("%d\n", *eip);
+	printf("%08x\n", *eip);
   if (p) {
     uint8_t op = p->old_op;
     vaddr_write(*eip, 1, op);
