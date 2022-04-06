@@ -70,8 +70,10 @@ make_EHelper(int_3) {
   (*eip)--;
   WP* p = get_breakpoint(*eip);
 	if (p) {
+    printf("Hit watchpoint %d at address 0x%08x\n", p->NO, *eip);
     uint8_t op = p->old_op;
     vaddr_write(*eip, 1, op);
+    printf("program paused\n");
   }
   nemu_state = NEMU_STOP;
 }

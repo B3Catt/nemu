@@ -110,13 +110,13 @@ bool delete_watchpoint(int NO) {
 
 void list_watchpoint() {
   WP *p = head;
-  printf("NO Expr\t\t\tOld Value\n");
+  printf("NO Expr\t\t\tOld Value\tType\n");
   while (p) {
     if (p->type == 'w') {
-      printf("%d  0x%s\t\t\t0x%08x\n", p->NO, p->expr, p->old_val);
+      printf("%d  0x%s\t\t\t0x%08x\t%c\n", p->NO, p->expr, p->old_val, p->type);
     }
     else if (p->type == 'b') {
-      printf("%d  0x%08x\t\t\t0x%02x\n", p->NO, p->address, p->old_op);
+      printf("%d  0x%08x\t\t\t0x%02x\t\t%c\n", p->NO, p->address, p->old_op, p->type);
     }
     p = p->next;
   }
@@ -146,6 +146,9 @@ void set_breakpoint(uint32_t addr) {
   p->type = 'b';
   p->old_op = vaddr_read(p->address, 1);
   p->is_hitted = false;
+  printf("Set breakpoint #%d\n", p->NO);
+  printf("addr      = 0x%08x\n", p->address);
+  printf("old op    = %02x\n", p->old_op);
 }
 
 WP* get_breakpoint(uint32_t addr) {

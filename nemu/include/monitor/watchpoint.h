@@ -11,8 +11,9 @@ typedef struct watchpoint {
   char expr[64];
   uint32_t new_val, old_val;
   uint32_t address;
-  uint8_t type, old_op;
-  bool is_hitted;
+  char type;
+  uint8_t old_op;
+	bool is_hitted;
 } WP;
 
 int set_watchpoint(char*);
