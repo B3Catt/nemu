@@ -113,10 +113,10 @@ void list_watchpoint() {
   printf("NO Expr\t\t\tOld Value\n");
   while (p) {
     if (p->type == 'w') {
-      printf("%d 0x%s\t\t\t0x%08x\n", p->NO, p->expr, p->old_val);
+      printf("%d  0x%s\t\t\t0x%08x\n", p->NO, p->expr, p->old_val);
     }
     else if (p->type == 'b') {
-      printf("%d 0x%08x\n", p->NO, p->address);
+      printf("%d  0x%08x\n", p->NO, p->address);
     }
     p = p->next;
   }
@@ -165,6 +165,7 @@ void create_breakpoint() {
     if (p->type == 'b') {
       if (p->is_hitted) {
         p->is_hitted = false;
+				printf("%d\n", p->NO);
       }
       else {
         p->old_op = vaddr_read(p->address, 1);
