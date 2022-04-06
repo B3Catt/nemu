@@ -1,4 +1,6 @@
 #include "cpu/exec.h"
+#include "monitor/watchpoint.h"
+#include "monitor/monitor.h"
 
 void diff_test_skip_qemu();
 void diff_test_skip_nemu();
@@ -62,4 +64,14 @@ make_EHelper(out) {
 #ifdef DIFF_TEST
   diff_test_skip_qemu();
 #endif
+}
+
+make_EHelper(int_3) {
+  (*eip)--;
+  WP* p = get_breakpoint(*eip);
+  if (p) {
+    uint8_t op = p->old_op;
+    vaddr_write(*eip, 1, op);
+  }
+  nemu_state = NEMU_STOP;
 }

@@ -1,5 +1,6 @@
 #include "monitor/watchpoint.h"
 #include "monitor/expr.h"
+#include "memory/memory.h"
 
 #define NR_WP 32
 
@@ -77,12 +78,13 @@ int set_watchpoint(char *e) {
   bool flag = true;
   uint32_t val = expr(e, &flag);
   if (flag) {
-    WP *p = new_wp(); 
-    strcpy(p->expr, e);
+    WP *p = new_wp();
+    strcpy(e, p->expr);
     p->old_val = val;
+    p->type = 'w';
     printf("Set watchpoint #%d\n", p->NO);
     printf("expr      = %s\n", p->expr);
-    printf("old value = 0x%08x\n", p->old_val);
+    printf("old value = %08x\n", p->old_val);
   }
   else {
     printf("Wrong expression \"%s\"\n", e);
@@ -108,26 +110,68 @@ bool delete_watchpoint(int NO) {
 
 void list_watchpoint() {
   WP *p = head;
-  printf("NO Expr\t\tOld Value\n");
+  printf("NO Expr\t\t\tOld Value\n");
   while (p) {
-    printf("%d  %s\t\t0x%08x\n", p->NO, p->expr, p->old_val);
+    if (p->type == 'w') {
+      printf("%d 0x%s\t\t\t0x%08x\n", p->NO, p->expr, p->old_val);
+    }
+    else if (p->type == 'b') {
+      printf("%d 0x%08x\n", p->NO, p->address);
+    }
     p = p->next;
   }
 }
 
 WP* scan_watchpoint() {
   WP *p = head, *q = head;
-	bool flag = true;
+  bool flag = true;
   while (q) {
-    q->new_val = expr(q->expr, &flag);
+    if (q->type == 'w') {
+      q->new_val = expr(q->expr, &flag);
+    }
     q = q->next;
   }
   while (p) {
-    if (p->old_val != p->new_val) {
+    if (p->type == 'w' && p->old_val != p->new_val) {
       return p;
     }
     p = p->next;
   }
   return NULL;
+}
+
+void set_breakpoint(uint32_t addr) {
+  WP *p = new_wp();
+  p->address = addr;
+  p->type = 'b';
+  p->is_hitted = false;
+}
+
+WP* get_breakpoint(uint32_t addr) {
+  WP *p = head;
+  while (p) {
+    if (p->type == 'b' && p->address == addr) {
+      p->is_hitted = true;
+      return p;
+    }
+    p = p->next;
+  }
+  return NULL;
+}
+
+void create_breakpoint() {
+  WP *p = head;
+  while (p) {
+    if (p->type == 'b') {
+      if (p->is_hitted) {
+        p->is_hitted = false;
+      }
+      else {
+        p->old_op = vaddr_read(p->address, 1);
+        vaddr_write(p->address, 1, 0xcc);
+      }
+    }
+    p = p->next;
+  }
 }
 
