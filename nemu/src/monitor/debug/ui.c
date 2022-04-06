@@ -98,6 +98,7 @@ static int cmd_help(char *args) {
 }
 
 static int cmd_si(char *args){
+  create_breakpoint();
   // TODO: 利用 strtok 读取出 N
   char *str_num = strtok(NULL, " ");
   // TODO: 然后根据 N 来执行对应的 cpu_exec(N) 操作
