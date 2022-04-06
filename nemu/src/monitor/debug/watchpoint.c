@@ -116,7 +116,7 @@ void list_watchpoint() {
       printf("%d  0x%s\t\t\t0x%08x\n", p->NO, p->expr, p->old_val);
     }
     else if (p->type == 'b') {
-      printf("%d  0x%08x\n", p->NO, p->address);
+      printf("%d  0x%08x\t\t\t0x%02x\n", p->NO, p->address, p->old_op);
     }
     p = p->next;
   }
