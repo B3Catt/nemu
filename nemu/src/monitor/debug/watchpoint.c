@@ -110,7 +110,7 @@ bool delete_watchpoint(int NO) {
 
 void list_watchpoint() {
   WP *p = head;
-  printf("NO Expr\t\tOld Value\tType\n");
+  printf("NO Expr\t\t\tOld Value\tType\n");
   while (p) {
     if (p->type == 'w') {
       printf("%d  0x%s\t\t0x%08x\t%c\n", p->NO, p->expr, p->old_val, p->type);
