@@ -136,26 +136,31 @@ static int cmd_info(char *args){
   return 0;
 }
 
-static int cmd_x(char *args){
+static int cmd_x(char *args) {
   //分割字符串，得到起始位置和要读取的次数
   char *str_num = strtok(NULL, " "),
     *str_expr = strtok(NULL, " ");
   int n = 0;
   vaddr_t addr = 0;
+  bool flag = true;
 
   sscanf(str_num, "%d", &n);
-  sscanf(str_expr, "%x", &addr);
- 	printf("Address \tDword block\tByte sequence\n");
-  //循环使用 vaddr_read 函数来读取内存
-  for (int i = 0; i < n; i ++) {
-    uint32_t read = vaddr_read(addr + 4 * i, 4);
-    uint8_t bytes[4];
-    for (int j = 0; j < 4; j ++) {
-      bytes[j] = vaddr_read(addr + 4 * i + j, 1);
-	}
-
-  //每次循环将读取到的数据用 printf 打印出来
-    printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, read, bytes[0], bytes[1], bytes[2], bytes[3]);
+  addr = expr(str_expr, &flag);
+  if (flag) {
+    printf("Address \tDword block\tByte sequence\n");
+    //循环使用 vaddr_read 函数来读取内存
+    for (int i = 0; i < n; i ++) {
+      uint32_t read = vaddr_read(addr + 4 * i, 4);
+      uint8_t bytes[4];
+      for (int j = 0; j < 4; j ++) {
+        bytes[j] = vaddr_read(addr + 4 * i + j, 1); 
+      }
+      //每次循环将读取到的数据用 printf 打印出来
+      printf("0x%08x\t0x%08x\t%02x %02x %02x %02x\n", addr + 4 * i, read, bytes[0], bytes[1], bytes[2], bytes[3]);
+    }
+  }
+  else {
+    printf("Wrong expression \"%s\"\n", args);
   }
   return 0;
 }
