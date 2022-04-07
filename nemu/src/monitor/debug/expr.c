@@ -156,7 +156,7 @@ bool check_parentheses(int p, int q, bool *success) {
   if (k == q && count == 0) {
     return true;
   }
-  else if (count < 0) {
+  else if (count != 0) {
     *success = false;
     return false;
   }
@@ -168,23 +168,26 @@ bool check_parentheses(int p, int q, bool *success) {
     else if (tokens[k].type == ')') {
       count--;
     }
-
-    if (count <= 0) {
+    
+    if (count < 0) {
       break;
     }
   }
-  if (count < 0) {
+  if (count != 0) {
     *success = false;
-    return false;
   }
-  else return false;
+  return false;
 }
 
 int find_dominated_op(int p, int q, bool *success) {
   int op = 0, op_type = TK_NOTYPE, count = 0;
+  if (!*success) {
+      return 0;
+  }
+
   for (int i = p; i <= q; i ++) {
     switch (tokens[i].type) {
-      case '(':
+			case '(':
         count ++; break;
       case ')':
         count --; break;
@@ -297,22 +300,26 @@ uint32_t eval(int p, int q, bool *success) {
     }
     else {
       int op = find_dominated_op(p, q, success);
+      if (!*success) {
+        return 0;
+      }
+
       int op_type = tokens[op].type;
-			//单目运算符
+      //单目运算符
       if (op_type >= TK_NOT && op_type <= TK_PTR) {
         int val = eval(p + 1, q, success);
         switch (op_type) {
           case TK_NEG: return -val;
           case TK_PTR: return vaddr_read(val, 4);
           case TK_NOT: return !val;
-          default: success = false; return 0;
+          default: break;
         }
       }
       //双目运算符
       else {
         int val1 = eval(p, op - 1, success),
           val2 = eval(op + 1, q, success);
-				switch (op_type) {
+        switch (op_type) {
           case TK_PLUS: return val1 + val2;
           case TK_SUB: return val1 - val2;
           case TK_MUL: return val1 * val2;
@@ -325,9 +332,10 @@ uint32_t eval(int p, int q, bool *success) {
           case TK_NB: return val1 >= val2;
           case TK_B: return val1 < val2;
           case TK_NBE: return val1 > val2;
-          default: success = false; return 0;
+          default: break;
         }
       }
+      return 0;
     }
   }
   else {
