@@ -112,7 +112,7 @@ static bool make_token(char *e) {
           case TK_NOTYPE: break;
           case TK_HEXN:
           case TK_DECN:
-            for (j = 0; j < 32 && j < substr_len; j ++) {
+            for (j = 0; j < 31 && j < substr_len; j ++) {
               tokens[nr_token].str[j] = *(substr_start + j);
             }
             tokens[nr_token].str[j] = '\0';
