@@ -85,11 +85,12 @@ int set_watchpoint(char *e) {
     printf("Set watchpoint #%d\n", p->NO);
     printf("expr      = %s\n", p->expr);
     printf("old value = 0x%08x\n", p->old_val);
+    return p->NO;
   }
   else {
     printf("Wrong expression \"%s\"\n", e);
   }
-  return 0;
+  return -1;
 }
 
 bool delete_watchpoint(int NO) {

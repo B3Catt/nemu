@@ -178,7 +178,8 @@ static int cmd_p(char* args) {
 }
 
 static int cmd_w(char* args) {
-  return set_watchpoint(args);
+  set_watchpoint(args);
+	return 0;
 }
 
 static int cmd_b(char* args) {
