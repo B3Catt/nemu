@@ -26,7 +26,6 @@ WP* new_wp() {
   }
 
   WP *p;
-  int NO = 0;
   if (!head) {
     head = free_;
     free_ = free_->next;
@@ -36,15 +35,12 @@ WP* new_wp() {
     p = head;
     while (p->next) {
       p = p->next;
-      NO++;
     }
     p->next = free_;
     free_ = free_->next;
     p = p->next;
-    NO++;
   }
   p->next = NULL;
-  p->NO = NO;
   return p;
 }
 
@@ -52,27 +48,30 @@ void free_wp(WP *wp) {
   if (!wp) {
     assert(0);
   }
+  
   WP *p, *q = NULL;
   p = head;
   while (p != wp) {
     q = p;
     p = p->next;
   }
+  if (!p) {
+    return;
+  }
+
   if (q) {
     q->next = p->next;
-    q = q->next;
   }
   else {
     head = head->next;
-    q = head;
   }
-  p->next = free_;
-  free_ = p;
-  while (q) {
-    q->NO --;
+  q = free_;
+  while (q->next) {
     q = q->next;
   }
-} 
+  q->next = p;
+  p->next = NULL;
+}  
 
 int set_watchpoint(char *e) {
   bool flag = true;
