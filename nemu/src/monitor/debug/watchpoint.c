@@ -21,9 +21,7 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 WP* new_wp() {
-  if (!free_) {
-    assert(0);
-  }
+  assert(free_);
 
   WP *p;
   if (!head) {
@@ -45,9 +43,7 @@ WP* new_wp() {
 }
 
 void free_wp(WP *wp) {
-  if (!wp) {
-    assert(0);
-  }
+  assert(head);
   
   WP *p, *q = NULL;
   p = head;
