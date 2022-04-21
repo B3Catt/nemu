@@ -6,7 +6,8 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  TODO();
+  rtl_lr(&(id_dest->val), decoding.opcode - 0x50, 4);
+  rtl_push(&(id_dest->val));
 
   print_asm_template1(push);
 }
