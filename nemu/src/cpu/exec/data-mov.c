@@ -6,14 +6,20 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  rtl_lr(&(id_dest->val), decoding.opcode - 0x50, 4);
-  rtl_push(&(id_dest->val));
+  if (id_dest->type == OP_TYPE_MEM) {
+    rtl_lm(&t1, &(id_dest->addr), id_dest->width);
+    rtl_push(&t1);
+  }
+  else if (id_dest->type == OP_TYPE_REG) {
+    rtl_push(&(id_dest->val));
+  }
 
   print_asm_template1(push);
 }
 
 make_EHelper(pop) {
-  TODO();
+  rtl_pop(&(id_dest->val));
+  rtl_sr(id_dest->reg, id_dest->width, &(id_dest->val));
 
   print_asm_template1(pop);
 }
