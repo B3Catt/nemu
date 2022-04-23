@@ -38,7 +38,7 @@ make_EHelper(ret) {
     rtl_addi(&t0, &t0, id_dest->val);
     rtl_sr(R_ESP, 4, &t0);
   }
-	print_asm("ret");
+	//print_asm("ret");
 }
 
 make_EHelper(call_rm) {
