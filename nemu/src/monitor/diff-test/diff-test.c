@@ -161,7 +161,7 @@ void difftest_step(uint32_t eip) {
   }
 	if (r.eflags != cpu.eflags.val) {
     diff = true;
-    printf("Diffrent value array 9\n");
+    printf("Diffrent value array 9\nnemu:%d\nqemu:%d\n", cpu.eflags.val, r.eflags);
   }
 
   if (diff) {
