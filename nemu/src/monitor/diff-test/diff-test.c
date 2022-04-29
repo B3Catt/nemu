@@ -159,6 +159,10 @@ void difftest_step(uint32_t eip) {
     diff = true;
     printf("Diffrent value array 8\n");
   }
+	if (r.eflags != cpu.eflags.val) {
+    diff = true;
+    printf("Diffrent value array 9\n");
+  }
 
   if (diff) {
     nemu_state = NEMU_END;
