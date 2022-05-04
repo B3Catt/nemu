@@ -19,6 +19,7 @@ make_EHelper(call);
 make_EHelper(ret);
 
 make_EHelper(sub);
+make_EHelper(cmp);
 
 make_EHelper(and);
 make_EHelper(xor);
