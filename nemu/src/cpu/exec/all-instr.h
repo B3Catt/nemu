@@ -14,6 +14,7 @@ make_EHelper(nop);
 make_EHelper(int_3);
 
 make_EHelper(jmp);
+make_EHelper(jcc);
 make_EHelper(jmp_rm);
 make_EHelper(call);
 make_EHelper(ret);
