@@ -53,7 +53,7 @@ make_EHelper(cmp) {
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-
+	printf("0x%08x\n", cpu.eflags.val);
   print_asm_template2(cmp);
 }
 
