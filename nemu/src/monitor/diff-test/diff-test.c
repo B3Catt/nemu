@@ -152,12 +152,12 @@ void difftest_step(uint32_t eip) {
   for (int i = 0; i < 8; i++) {
     if (r.array[i] != reg_l(i)) {
       diff = true;
-      printf("Diffrent value array %d\n", i);
+      printf("Diffrent value array %d\nqemu: 0x%08x\nnemu: 0x%08x\n", i, r.array[i], reg_l(i));
     }
   }
   if (r.eip != cpu.eip) {
     diff = true;
-    printf("Diffrent value array 8\n");
+    printf("Diffrent value array 8\nqemu: 0x%08x\nnemu: 0x%08x\n", r.array[8], cpu.eip);
   }
 	/*if (r.eflags != cpu.eflags.val) {
     diff = true;
