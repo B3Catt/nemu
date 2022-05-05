@@ -191,6 +191,7 @@ static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   rtl_andi(&t0, result, 0x80 << (width - 1));
   t1 = !!t0;
   rtl_set_SF(&t1);
+	printf("%d\n", cpu.eflags.ZF);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
