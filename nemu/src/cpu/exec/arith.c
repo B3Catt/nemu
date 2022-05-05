@@ -21,7 +21,7 @@ make_EHelper(add) {
 }
 
 make_EHelper(sub) {
-  rtl_subi(&t2, &id_dest->val, id_src->simm);
+  rtl_subi(&t2, &id_dest->val, id_src->val);
   rtl_sltu(&t3, &id_dest->val, &t2);
   operand_write(id_dest, &t2);
   rtl_update_ZFSF(&t2, id_dest->width);
@@ -40,7 +40,7 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  rtl_subi(&t2, &id_dest->val, id_src->simm);
+  rtl_subi(&t2, &id_dest->val, id_src->val);
   rtl_sltu(&t3, &id_dest->val, &t2);
   rtl_update_ZFSF(&t2, id_dest->width);
 
@@ -53,7 +53,7 @@ make_EHelper(cmp) {
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-	printf("0x%08x\n", cpu.eflags.val);
+	
   print_asm_template2(cmp);
 }
 
