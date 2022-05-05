@@ -15,14 +15,13 @@ make_EHelper(and) {
 make_EHelper(xor) {
 	rtl_xor(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
-
   print_asm_template2(xor);
 }
 
 make_EHelper(or) {
-  TODO();
-
-  print_asm_template2(or);
+  rtl_or(&t2, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t2);
+	print_asm_template2(or);
 }
 
 make_EHelper(sar) {
