@@ -50,6 +50,17 @@ make_EHelper(leave) {
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
+    TODO();
+  }
+  else {
+    TODO();
+  }
+
+  print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
+}
+
+make_EHelper(cwtl) {
+  if (decoding.is_operand_size_16) {
     rtl_lr_w(&t2, R_AX);
     rtl_msb(&t3, &t2, 2);
     if (t3)
@@ -64,17 +75,6 @@ make_EHelper(cltd) {
       t0 = 0xffffffff;
     else t0 = 0;
     rtl_sr_w(R_EDX, &t0);
-  }
-
-  print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
-}
-
-make_EHelper(cwtl) {
-  if (decoding.is_operand_size_16) {
-    TODO();
-  }
-  else {
-    TODO();
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
