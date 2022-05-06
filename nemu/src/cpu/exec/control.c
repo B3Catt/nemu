@@ -26,7 +26,7 @@ make_EHelper(jmp_rm) {
 make_EHelper(call) {
   // the target address is calculated at the decode stage
   rtl_push(eip);
-  if (id_dest->type == OP_TYPE_MEM) {
+  if (id_dest->type == OP_TYPE_MEM || id_dest->type == OP_TYPE_REG) {
     rtl_mv(&decoding.jmp_eip, &id_dest->val);
   }
   else {
