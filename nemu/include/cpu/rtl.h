@@ -139,7 +139,7 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   assert(width == 1 || width == 2 || width == 4);
   rtl_shli(&t0, src1, 8 * (4 - width));
   rtl_sari(dest, &t0, 8 * (4 - width));
-	printf("0x%08x\n", *dest);
+	printf("%d; 0x%08x\n", width, *dest);
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
