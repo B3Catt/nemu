@@ -55,8 +55,7 @@ make_EHelper(cltd) {
     if (t3)
       t0 = 0xffff;
     else t0 = 0;
-    rtl_or(&t1, &t2, &t0);
-    rtl_sr_w(R_DX, &t1);
+    rtl_sr_w(R_DX, &t0);
   }
   else {
     rtl_lr_l(&t2, R_AX);
@@ -64,8 +63,7 @@ make_EHelper(cltd) {
     if (t3)
       t0 = 0xffffffff;
     else t0 = 0;
-    rtl_or(&t1, &t2, &t0);
-    rtl_sr_l(R_EDX, &t1);
+    rtl_sr_l(R_EDX, &t0);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
