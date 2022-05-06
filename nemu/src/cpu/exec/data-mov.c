@@ -50,10 +50,20 @@ make_EHelper(leave) {
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    rtl_lr_w(&t2, R_AX);
+    rtl_msb(&t3, &t2, 2);
+    if (t3)
+      t0 = 0xffff;
+    else t0 = 0;
+    rtl_sr_w(R_DX, &t0);
   }
   else {
-    TODO();
+    rtl_lr_l(&t2, R_EAX);
+    rtl_msb(&t3, &t2, 4);
+    if (t3)
+      t0 = 0xffffffff;
+    else t0 = 0;
+    rtl_sr_w(R_EDX, &t0);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
