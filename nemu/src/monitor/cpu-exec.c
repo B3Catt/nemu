@@ -26,8 +26,9 @@ void cpu_exec(uint64_t n) {
   for (; n > 0; n --) {
 	/* Execute one instruction, including instruction fetch,
    * instruction decode, and the actual execution. */
-  
+#ifdef DEBUG  
   uint32_t old_eip = cpu.eip;
+#endif
 	exec_wrapper(print_flag);
 
 #ifdef DEBUG
