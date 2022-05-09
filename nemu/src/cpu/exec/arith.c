@@ -103,7 +103,11 @@ make_EHelper(neg) {
   rtl_set_CF(&t2);
 
   rtl_msb(&t2, &id_dest->val, id_dest->width);
-  rtl_xori(&t3, &id_dest->val, (1 << id_dest->width * 8) - 1);
+  if (id_dest->width == 1)
+    rtl_xori(&t3, &id_dest->val, 0xff);
+  else if (id_dest->width == 2)
+    rtl_xori(&t3, &id_dest->val, 0xffff);
+  else rtl_xori(&t3, &id_dest->val, 0xffffffff);
   rtl_addi(&t3, &t3, 1);
   operand_write(id_dest, &t3);
   rtl_update_ZFSF(&t3, id_dest->width);
