@@ -14,7 +14,8 @@ static uint32_t get(uint32_t *m, int i, int j) {
 }
 
 static inline void mult(uint32_t *c, uint32_t *a, uint32_t *b) {
-  for (int i = 0; i < M; i ++)
+  printf("%d\n", M);
+	for (int i = 0; i < M; i ++)
     for (int j = 0; j < M; j ++) {
       put(c, i, j, 0);
       for (int k = 0; k < M; k ++) {
