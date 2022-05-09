@@ -97,7 +97,21 @@ make_EHelper(dec) {
 }
 
 make_EHelper(neg) {
-  TODO();
+  if (id_dest->val == 0)
+    t2 = 0;
+  else t2 = 1;
+  rtl_set_CF(&t2);
+
+  rtl_msb(&t2, &id_dest->val, id_dest->width);
+  rtl_xori(&t3, &id_dest->val, (1 << id_dest->width) - 1);
+  rtl_addi(&t3, &t3, 1);
+  operand_write(id_dest, &t3);
+  rtl_update_ZFSF(&t3, id_dest->width);
+
+  rtl_msb(&t0, &t3, id_dest->width);
+  rtl_not(&t0);
+  rtl_xor(&t1, &t2, &t0);
+  rtl_set_OF(&t1);
 
   print_asm_template1(neg);
 }
