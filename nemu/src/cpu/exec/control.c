@@ -40,7 +40,7 @@ make_EHelper(ret) {
     rtl_addi(&t0, &t0, id_dest->val);
     rtl_sr(R_ESP, 4, &t0);
   }
-	printf("ret : 0x%x8x\n", decoding.jmp_eip);
+	printf("ret : 0x%x\n", decoding.jmp_eip);
 	print_asm("ret");
 }
 
