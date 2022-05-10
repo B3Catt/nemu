@@ -56,7 +56,6 @@ void bench_fib_run() {
     }
     mult(tmp, T, T);
     assign(T, tmp);
-		printf("%d\n", n);
   }
 }
 
