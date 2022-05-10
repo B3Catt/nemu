@@ -14,7 +14,7 @@ make_EHelper(push) {
     rtl_push(&(id_dest->val));
   }
   else if (id_dest->type == OP_TYPE_IMM) {
-    rtl_push(&t2);
+    rtl_push(&id_dest->val);
 	}
 
   print_asm_template1(push);
