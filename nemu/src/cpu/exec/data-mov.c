@@ -6,7 +6,7 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  if (id_dest->type == OP_TYPE_MEM) {
+  /*if (id_dest->type == OP_TYPE_MEM) {
     rtl_lm(&t1, &(id_dest->addr), id_dest->width);
     rtl_push(&t1);
   }
@@ -15,7 +15,8 @@ make_EHelper(push) {
   }
   else if (id_dest->type == OP_TYPE_IMM) {
     rtl_push(&id_dest->val);
-	}
+	}*/
+	rtl_push(&id_dest->val);
 
   print_asm_template1(push);
 }
