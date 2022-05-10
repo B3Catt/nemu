@@ -72,18 +72,12 @@ make_EHelper(cltd) {
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
     rtl_lr_b(&t2, R_AL);
-    rtl_msb(&t3, &t2, 1);
-    if (t3)
-      t0 = 0xff;
-    else t0 = 0;
+    rtl_sext(&t0, &t2, 1);
     rtl_sr_b(R_AH, &t0);
   }
   else {
     rtl_lr_w(&t2, R_AX);
-    rtl_msb(&t3, &t2, 4);
-    if (t3)
-      t0 = 0xffff;
-    else t0 = 0;
+    rtl_sext(&t0, &t2, 2);
     rtl_sr_l(R_EAX, &t0);
   }
 
