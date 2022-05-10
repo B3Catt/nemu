@@ -241,9 +241,9 @@ void exec_wrapper(bool print_flag) {
   strcat(strbuf, decoding.assembly);
   strcpy(decoding.asm_buf, strbuf);
   Log_write("%s\n", decoding.asm_buf);
-  //if (print_flag) {
+  if (print_flag) {
     puts(decoding.asm_buf);
-  //}
+  }
 #endif
 
 #ifdef DIFF_TEST
