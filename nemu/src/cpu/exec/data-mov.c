@@ -31,19 +31,19 @@ make_EHelper(pop) {
 make_EHelper(pusha) {
   if (decoding.is_operand_size_16) {
     t2 = reg_w(R_SP);
-    t0 = reg_w(R_CX);
-    rtl_push(&t0);
-    t0 = reg_w(R_DX);
-    rtl_push(&t0);
-    t0 = reg_w(R_BX);
-    rtl_push(&t0);
+    t3 = reg_w(R_CX);
+    rtl_push(&t3);
+    t3 = reg_w(R_DX);
+    rtl_push(&t3);
+    t3 = reg_w(R_BX);
+    rtl_push(&t3);
     rtl_push(&t2);
-    t0 = reg_w(R_BP);
-    rtl_push(&t0);
-    t0 = reg_w(R_SI);
-    rtl_push(&t0);
-    t0 = reg_w(R_DI);
-    rtl_push(&t0);
+    t3 = reg_w(R_BP);
+    rtl_push(&t3);
+    t3 = reg_w(R_SI);
+    rtl_push(&t3);
+    t3 = reg_w(R_DI);
+    rtl_push(&t3);
   }
   else {
     t2 = reg_l(R_ESP);
@@ -61,50 +61,41 @@ make_EHelper(pusha) {
 }
 
 make_EHelper(popa) {
-	printf("g\n");
-	if (decoding.is_operand_size_16) {
-    rtl_pop(&t0);
-    rtl_sr(R_DI, 2, &t0);
-    rtl_pop(&t0);
-    rtl_sr(R_SI, 2, &t0);
-    rtl_pop(&t0);
-    rtl_sr(R_BP, 2, &t0);
-    rtl_pop(&t0);
-    rtl_pop(&t0);
-    rtl_sr(R_BX, 2, &t0);
-    rtl_pop(&t0);
-    rtl_sr(R_DX, 2, &t0);
-    rtl_pop(&t0);
-    rtl_sr(R_CX, 2, &t0);
-    rtl_pop(&t0);
-    rtl_sr(R_AX, 2, &t0);
+  if (decoding.is_operand_size_16) {
+    rtl_pop(&t2);
+    rtl_sr(R_DI, 2, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_SI, 2, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_BP, 2, &t2);
+    rtl_pop(&t2);
+    rtl_pop(&t2);
+    rtl_sr(R_BX, 2, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_DX, 2, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_CX, 2, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_AX, 2, &t2);
   }
   else {
-    rtl_pop(&t0);
-    printf("0x%08x\n", t0);
-    rtl_sr(R_EDI, 4, &t0);
-    rtl_pop(&t0);
-    printf("%d\n", t0);
-    rtl_sr(R_ESI, 4, &t0);
-    rtl_pop(&t0);
-    printf("%d\n", t0);
-    rtl_sr(R_EBP, 4, &t0);
-    rtl_pop(&t0);
-    printf("%d\n", t0);
-    rtl_pop(&t0);
-    printf("%d\n", t0);
-    rtl_sr(R_EBX, 4, &t0);
-    rtl_pop(&t0);
-    printf("%d\n", t0);
-    rtl_sr(R_EDX, 4, &t0);
-    rtl_pop(&t0);
-    printf("%d\n", t0);
-    rtl_sr(R_ECX, 4, &t0);
-    rtl_pop(&t0);
-    printf("%d\n", t0);
-    rtl_sr(R_EAX, 4, &t0);
+    rtl_pop(&t2);
+    rtl_sr(R_EDI, 4, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_ESI, 4, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_EBP, 4, &t2);
+    rtl_pop(&t2);
+    rtl_pop(&t2);
+    rtl_sr(R_EBX, 4, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_EDX, 4, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_ECX, 4, &t2);
+    rtl_pop(&t2);
+    rtl_sr(R_EAX, 4, &t2);
   }
-	printf("g\n");
+
   print_asm("popa");
 }
 
