@@ -53,6 +53,7 @@ _RegSet* do_syscall(_RegSet *r) {
 		case SYS_none:
     SYSCALL_ARG1(r) = sys_none(); break;
 		case SYS_exit:
+		printf("&d\n", a[0]);
     SYSCALL_ARG1(r) = sys_exit(r); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
