@@ -37,7 +37,8 @@ static inline uintptr_t sys_none() {
 }
 
 static inline uintptr_t sys_exit(uintptr_t arg) {
-  //_halt(arg);
+  printf("%d\n", arg);
+	_halt(arg);
   return 1;
 }
 
