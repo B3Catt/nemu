@@ -166,7 +166,7 @@ void difftest_step(uint32_t eip) {
 
   if (diff) {
     nemu_state = NEMU_END;
-		int temp = vaddr_read(cpu.eip, 4);
+		uint32_t temp = vaddr_read(cpu.eip, 4);
 		printf("%08x\n", temp);
   }
 }
