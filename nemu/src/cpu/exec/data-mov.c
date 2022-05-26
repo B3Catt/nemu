@@ -81,7 +81,7 @@ make_EHelper(popa) {
   }
   else {
     rtl_pop(&t0);
-    printf("%d\n", t0);
+    printf("0x%08x\n", t0);
     rtl_sr(R_EDI, 4, &t0);
     rtl_pop(&t0);
     printf("%d\n", t0);
