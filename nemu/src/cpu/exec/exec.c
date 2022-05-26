@@ -114,7 +114,7 @@ opcode_entry opcode_table [512] = {
   /* 0x9c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xa0 */	IDEXW(O2a, mov, 1), IDEX(O2a, mov), IDEXW(a2O, mov, 1), IDEX(a2O, mov),
   /* 0xa4 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0xa8 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0xa8 */	IDEXW(I2a, test, 1), IDEX(I2a, test), EMPTY, EMPTY,
   /* 0xac */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xb0 */	IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1),
   /* 0xb4 */	IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1),
@@ -241,9 +241,9 @@ void exec_wrapper(bool print_flag) {
   strcat(strbuf, decoding.assembly);
   strcpy(decoding.asm_buf, strbuf);
   Log_write("%s\n", decoding.asm_buf);
-  //if (print_flag) {
+  if (print_flag) {
     puts(decoding.asm_buf);
-  //}
+  }
 #endif
 
 #ifdef DIFF_TEST
