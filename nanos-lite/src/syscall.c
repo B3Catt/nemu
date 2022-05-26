@@ -36,8 +36,8 @@ static inline uintptr_t sys_none() {
   return 1;
 }
 
-static inline uintptr_t sys_exit(_RegSet *r) {
-  _halt(SYSCALL_ARG2(r));
+static inline uintptr_t sys_exit(uintptr_t arg) {
+  _halt(arg);
   return 1;
 }
 
@@ -52,8 +52,7 @@ _RegSet* do_syscall(_RegSet *r) {
 		case SYS_none:
     SYSCALL_ARG1(r) = sys_none(); break;
 		case SYS_exit:
-    SYSCALL_ARG1(r) = sys_exit(r);
-		break;
+    SYSCALL_ARG1(r) = sys_exit(a[1]); break;
     case SYS_write:
     SYSCALL_ARG1(r) = sys_write(a[1], a[2], a[3]); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
