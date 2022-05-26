@@ -61,6 +61,7 @@ make_EHelper(pusha) {
 }
 
 make_EHelper(popa) {
+	printf("g\n");
   if (decoding.is_operand_size_16) {
     rtl_pop(&t0);
     rtl_sr(R_DI, 2, &t0);
@@ -95,7 +96,7 @@ make_EHelper(popa) {
     rtl_pop(&t0);
     rtl_sr(R_EAX, 4, &t0);
   }
-
+	printf("g\n");
   print_asm("popa");
 }
 
