@@ -10,6 +10,8 @@
 #ifndef __ISA_NATIVE__
 
 // FIXME: this is temporary
+extern char _end;
+uintptr_t brk = (uintptr_t)&_end;
 
 int _syscall_(int type, uintptr_t a0, uintptr_t a1, uintptr_t a2){
   int ret = -1;
@@ -30,7 +32,14 @@ int _write(int fd, void *buf, size_t count){
 }
 
 void *_sbrk(intptr_t increment){
-  return (void *)-1;
+  uintptr_t pre = brk,
+    new = pre + increment;
+  int ret = _syscall_(SYS_brk, new, 0, 0);
+  if (ret == 0) {
+    brk = new;
+    return (void *)pre;
+  }
+  else return (void *)-1;
 }
 
 int _read(int fd, void *buf, size_t count) {
