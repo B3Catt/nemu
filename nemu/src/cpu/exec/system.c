@@ -34,12 +34,23 @@ make_EHelper(mov_r2cr) {
 }
 
 make_EHelper(mov_cr2r) {
-  switch (id_dest->reg) {
+  /*switch (id_dest->reg) {
     case 0:
       operand_write(id_dest, &cpu.cr0.val);
       break;
     case 3:
       operand_write(id_dest, &cpu.cr3.val);
+      break;
+    default:
+      assert(0);
+      break;
+  }*/
+	switch (id_dest->reg){
+    case 0:
+      id_src->val = cpu.cr0.val;
+      break;
+    case 3:
+      id_src->val = cpu.cr3.val;
       break;
     default:
       assert(0);
