@@ -6,7 +6,7 @@ paddr_t page_translate(vaddr_t vaddr, bool is_write) {
  
   paddr_t base = cpu.cr3.page_directory_base << 12;
   vaddr_t dir = (vaddr >> 22) << 2;
-  paddr_t pd_addr = base & dir;
+  paddr_t pd_addr = base | dir;
   Log("pd_addr:0x%x", pd_addr);
   PDE pd;
   pd.val = paddr_read(pd_addr, 4);
@@ -15,7 +15,7 @@ paddr_t page_translate(vaddr_t vaddr, bool is_write) {
 
   base = pd.page_frame << 12;
   dir = ((vaddr >> 12) & 0x3ff) << 2;
-  paddr_t pt_addr = base & dir;
+  paddr_t pt_addr = base | dir;
   Log("pt_addr:0x%x", pt_addr);
   PTE pt;
   pt.val = paddr_read(pt_addr, 4);
@@ -24,7 +24,7 @@ paddr_t page_translate(vaddr_t vaddr, bool is_write) {
 
   base = pt.page_frame << 12;
   dir = vaddr & 0xfff;
-  paddr_t paddr = base & dir;
+  paddr_t paddr = base | dir;
   Log("paddr:0x%x", paddr);
 
   pd.accessed = 1;

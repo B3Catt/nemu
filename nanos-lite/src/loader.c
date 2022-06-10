@@ -20,7 +20,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
   int page_count = fs_filesz(fd) / 4096 + 1;
 
   for (int i = 0; i < page_count; i++) {
-    va = DEFAULT_ENTRY + (i << 12);
+    va = DEFAULT_ENTRY + 4096 * i;
     pa = new_page();
     Log("Map va to pa: 0x%08x to 0x%08x",va,pa);
     _map(as, va, pa);
