@@ -31,7 +31,19 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   if(cpu.cr0.paging) {
     if ((addr & 0xfff) + len > PAGE_SIZE) {
       /* this is a special case, you can handle it later. */
-      assert(0);
+      int len1, len2;
+      len1 = 0x1000-(addr & 0xfff);//获取前一页的占用空间
+      len2 = len - len1;//获取后一页的占用空间
+
+      paddr_t addr1 = page_translate(addr, false);//虚拟地址转换为物理地址
+      uint32_t data1 = paddr_read(addr1, len1);//读取内容
+
+      paddr_t addr2 = page_translate(addr + len1, false);//虚拟地址转换为物理地址
+      uint32_t data2 = paddr_read(addr2, len2);//读取内容
+
+      //len1<<3表示获取data1的位数
+      uint32_t data = (data2 << (len1 << 3)) + data1;//把data2的数据移到高位，组合读取到的内容。
+      return data;
     }
     else {
       paddr_t paddr = page_translate(addr, false);
@@ -46,7 +58,16 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   if(cpu.cr0.paging) {
     if ((addr & 0xfff) + len > PAGE_SIZE) {
       /* this is a special case, you can handle it later. */
-      assert(0);
+      int len1, len2;
+      len1 = 0x1000-(addr & 0xfff);//获取前一页的占用空间
+      len2 = len - len1;//获取后一页的占用空间
+
+      paddr_t addr1 = page_translate(addr, true);//虚拟地址转换为物理地址
+      paddr_write(addr1, len1, data);//写入内容
+
+      paddr_t data2 = data >> (len1 << 3);
+      paddr_t addr2 = page_translate(addr + len1, true);
+      paddr_write(addr2, len2, data2);
     }
     else {
       paddr_t paddr = page_translate(addr, true);
