@@ -11,7 +11,7 @@ paddr_t page_translate(vaddr_t vaddr, bool is_write) {
   PDE pd;
   pd.val = paddr_read(pd_addr, 4);
   Log("pd_val:0x%x", pd.val);
-  //assert(pd.present);
+  assert(pd.present);
 
   base = pd.page_frame << 12;
   dir = ((vaddr >> 12) & 0x3ff) << 2;
@@ -20,7 +20,7 @@ paddr_t page_translate(vaddr_t vaddr, bool is_write) {
   PTE pt;
   pt.val = paddr_read(pt_addr, 4);
   Log("pt_val:0x%x", pt.val);
-  //assert(pt.present);
+  assert(pt.present);
 
   base = pt.page_frame << 12;
   dir = vaddr & 0xfff;
