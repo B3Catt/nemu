@@ -197,7 +197,7 @@ static int cmd_d(char* args) {
     printf("Watchpoint %d deleted\n", n);
   }
   else {
-    printf("Watchpoint %d not exist", n);
+    printf("Watchpoint %d not exist\n", n);
   }
   return 0;
 }
